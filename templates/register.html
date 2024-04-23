@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff; /* white background */
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            width: 400px; /* medium size */
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-outline-custom {
+            border-color: #007bff; /* blue outline */
+            color: #007bff; /* blue text */
+            width: 100%; /* full width button */
+            border-radius: 20px; /* rounded corners */
+        }
+        .btn-outline-custom:hover {
+            background-color: #007bff; /* blue background on hover */
+            color: #ffffff; /* white text on hover */
+        }
+
+        /* Bold flash messages */
+        .flash {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card p-4">
+            <h2 class="text-center mb-4">Sign Up</h2>
+            <form id="signupForm" action="/register" method="POST">
+                <div class="form-group">
+                    <label for="name">Username</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-outline-custom mt-3">Sign Up</button>
+                
+                <div class="text-center my-3">
+					<span class="txt1">
+						I Have Account Already!
+					</span>
+
+					<a class="txt2" href="/login">
+						Login
+					</a>
+                </div>
+            </form>
+            
+
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="text-center">
+                        {% for message in messages %}
+                            <div class="flash text-danger">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            // Prevent form submission if any field is empty
+            var username = document.getElementById('user').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var password = document.getElementById('password').value.trim();
+    
+            if (!username || !email || !password) {
+                event.preventDefault();
+                alert('Please fill in all fields.');
+            }
+        });
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
