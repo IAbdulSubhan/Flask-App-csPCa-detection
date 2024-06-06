@@ -1,7 +1,9 @@
 # MRI Image Classification and Segmentation
 
 This is a Flask web application for classifying and segmenting MRI images. It uses pre-trained models for both binary classification and segmentation tasks. The application allows users to upload MRI images and receive predictions about whether the images are cancerous or non-cancerous. Additionally, it provides segmentation results for the uploaded images.
+Here is a demo of our project in action:
 
+![Demo GIF](https://github.com/IAbdulSubhan/Flask-App-csPCa-detection/blob/main/Demo.gif)
 ## Table of Contents
 
 - [Installation](#installation)
