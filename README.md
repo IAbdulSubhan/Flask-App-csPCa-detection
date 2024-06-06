@@ -52,24 +52,6 @@ Segment MRI: Provides segmentation results for the uploaded MRI images.
 Routes
 /uploadmri: Upload MRI images for classification.
 /segment: Upload MRI images for segmentation.
-Project Structure
-arduino
-Copy code
-.
-├── static/
-│   ├── images/
-│   └── styles/
-├── templates/
-│   ├── home.html
-│   ├── login.html
-│   ├── register.html
-│   ├── uploadmri.html
-│   └── segment.html
-├── app.py
-├── model_18.h5
-├── model_01.h5
-├── requirements.txt
-└── README.md
 static/: Contains static files like images and CSS styles.
 templates/: Contains HTML templates for different pages.
 app.py: The main Flask application file.
