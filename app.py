@@ -5,66 +5,164 @@ import keras
 import numpy as np
 from datetime import timedelta
 from keras.models import load_model
+from tensorflow.keras.layers import BatchNormalization
 from keras.preprocessing import image
+from PIL import Image  # Import PIL
 import os
-import tensorflow as tf
-import gevent
-from werkzeug.utils import secure_filename
-from gevent.pywsgi import WSGIServer
 
 # Set environment variable to disable oneDNN
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 # Ensure numpy is imported and necessary libraries are in place
 app = Flask(__name__)
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'your_secret_key'  # Needed for flash messages
 db = SQLAlchemy(app)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)  # Example: Expire after 30 minutes
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
-Images = "uploads"
-STATIC_FOLDER = "static"
-
-
-cnn_model = tf.keras.models.load_model(STATIC_FOLDER + "/catdog.h5")
-IMAGE_SIZE = 150
-
 # Load your model and create a dictionary for class mapping
+dic = {0: "Cancerous", 1: "Non Cancerous"}
+model = load_model("model.h5")
+unet = load_model("unet.h5")
 
-# Preprocess an image
-def preprocess_image(image):
-    image = tf.image.decode_jpeg(image, channels=3)
-    image = tf.image.resize(image, [IMAGE_SIZE, IMAGE_SIZE])
-    image /= 255.0  # normalize to [0,1] range
+# This should be an integer, not a list
+batch_norm_layer = BatchNormalization(axis=3)
 
-    return image
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+def predict_label(img_path):
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_array = image.img_to_array(img) / 255.0
+    img_array = img_array.reshape((1, 224, 224, 3))
+    
+    prediction = model.predict(img_array)
+    logging.info(f"Prediction probabilities: {prediction}")
+
+    # If using a custom threshold, change it here
+    threshold = 0.5
+    class_index = 1 if prediction[0][0] > threshold else 0
+    
+    class_label = dic[class_index]
+    
+    return class_label
+
+def segment(img_path):
+    img = image.load_img(img_path, target_size=(224, 224))
+    img_array = image.img_to_array(img) / 255.0
+    img_array = img_array.reshape((1, 224, 224, 3))
+    
+    prediction = unet.predict(img_array)
+    logging.info(f"Prediction probabilities: {prediction}")
+
+    # If using a custom threshold, change it here
+    threshold = 0.5
+    class_index = 1 if prediction[0][0] > threshold else 0
+    
+    class_label = dic[class_index]
+    
+    return class_label
 
 
-# Read the image from path and preprocess
-def load_and_preprocess_image(path):
-    image = tf.io.read_file(path)
+# Directory for storing images
+IMAGES_DIR = './static/images/'
 
-    return preprocess_image(image)
+def is_image_rgb(img_path):
+    """ Check if an image is in RGB format """
+    img = Image.open(img_path)
+    return img.mode == 'RGB'
 
-# Predict & classify image
-def classify(model, image_path):
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() == 'png'
 
-    preprocessed_imgage = load_and_preprocess_image(image_path)
-    preprocessed_imgage = tf.reshape(
-        preprocessed_imgage, (1, IMAGE_SIZE, IMAGE_SIZE, 3)
-    )
+@app.route('/uploadmri', methods=['GET', 'POST'])
+def uploadmri():
+    if not session.get('logged_in'):
+        flash("You need to be logged in to upload an MRI image.", "error")
+        return redirect(url_for('login'))
 
-    prob = cnn_model.predict(preprocessed_imgage)
-    label = "Cat" if prob[0][0] >= 0.5 else "Dog"
-    classified_prob = prob[0][0] if prob[0][0] >= 0.5 else 1 - prob[0][0]
+    if request.method == 'POST':
+        file = request.files.get('my_image')  # Get the uploaded file
 
-    # return label, classified_prob
+        # Check if the file is valid
+        if not file or file.filename == '':
+            flash("No file selected or invalid file.", "error")
+            return redirect(request.url)
 
-    return label
+        if not allowed_file(file.filename):
+            flash("Invalid file format. Only PNG images are accepted.", "error")
+            return redirect(request.url)
+
+        # Save the file and get the path
+        img_path = os.path.join(IMAGES_DIR, file.filename)
+        file.save(img_path)
+
+        # Check if the image is in RGB format and PNG
+        if is_image_rgb(img_path) and allowed_file(file.filename):
+            os.remove(img_path)  # Remove the image as it is not acceptable
+            flash("Invalid file format. RGB PNG images are not accepted.", "error")
+            return redirect(request.url)
+
+        # Check if the image is in RGB format
+        if is_image_rgb(img_path):
+            os.remove(img_path)  # Remove the image as it is not acceptable
+            flash("Uploaded image is in RGB format. Please upload the correct file.", "error")
+            return redirect(request.url)
+
+        # Extracting the file name
+        file_name = os.path.basename(img_path)
+
+        # Prediction logic and flash messages
+        predicted_label = predict_label(img_path)  # Predict based on the uploaded file
+        flash(f"Prediction: {predicted_label}", "success")
+
+        # Render the template with prediction and image
+        return render_template('uploadmri.html', prediction=predicted_label, file_name=file_name)
+    
+    # For GET request, render the form
+    return render_template('uploadmri.html')
 
 
+@app.route('/segment', methods=['GET', 'POST'])
+def segment():
+    if not session.get('logged_in'):
+        flash("You need to be logged in to upload an MRI image.", "error")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        file = request.files.get('seg_image')  # Get the uploaded file
+
+        # Check if the file is valid
+        if not file or file.filename == '':
+            flash("No file selected or invalid file.", "error")
+            return redirect(request.url)
+
+        if not allowed_file(file.filename):
+            flash("Invalid file format. Only PNG images are accepted.", "error")
+            return redirect(request.url)
+
+        # Save the file and get the path
+        img_path = os.path.join(IMAGES_DIR, file.filename)
+        file.save(img_path)
+
+        # Check if the image is in RGB format
+        if is_image_rgb(img_path):
+            flash("Uploaded image is in RGB format. Please upload the correct file.", "error")
+            return redirect(request.url)
+
+        # Extracting the file name
+        file_name = os.path.basename(img_path)
+
+        # Prediction logic and flash messages
+        predicted_label = predict_label(img_path)  # Predict based on the uploaded file
+        flash(f"Prediction: {predicted_label}", "success")
+
+        # Render the template with prediction and image
+        return render_template('segment.html', prediction=predicted_label, file_name=file_name)
+    
+    # For GET request, render the form
+    return render_template('segment.html')
 
 # Database model for users
 class User(db.Model):
@@ -89,77 +187,16 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
-
-@app.route('/uploadmri', methods=['GET', 'POST'])
-def upload_mri():
-    if request.method == 'POST':
-        if 'my_image' not in request.files:
-            flash("No file part in the request.", "error")
-            return redirect(request.url)
-
-        file = request.files['my_image']
-
-        if file.filename == '':
-            flash("No selected file.", "error")
-            return redirect(request.url)
-
-        img_path = os.path.join('Images', file.filename)
-        file.save(img_path)
-
-        label = classify(cnn_model, img_path)
-
-        # For convenience, use 'filename' to avoid the unbound error
-        filename = file.filename if file else "No file provided"
-
-        return render_template("uploadmri.html", image_file_name=filename, label=label)
-
-    return render_template("uploadmri.html")
-
-    # return None
-    # if not session.get('logged_in'):
-    #     flash("You need to be logged in to upload an MRI image.", "error")
-    #     return redirect(url_for('login'))
-    
-    # if request.method == 'POST':
-    #     # Get the file from the form
-    #     if 'my_image' not in request.files:
-    #         flash("No file part in the request.", "error")
-    #         return redirect(request.url)
-
-    #     file = request.files['my_image']
-
-    #     # Check if a file is uploaded
-    #     if file.filename == '':
-    #         flash("No selected file.", "error")
-    #         return redirect(request.url)
-
-    #     # Validate the file type (assuming MRI files are images)
-    #     if not file.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-    #         flash("Only PNG, JPG, or JPEG files are allowed.", "error")
-    #         return redirect(request.url)
-
-    #     # Save the file to a temporary location
-    #     img_path = os.path.join('images', file.filename)  # You might need to create 'temp' directory
-    #     file.save(img_path)
-
-    #     # Get the prediction
-    #     predicted_label = predict_label(img_path)
-
-    #     # Return the predicted label with a flash message
-    #     flash(f"Prediction: {predicted_label}", "success")
-    #     os.remove(img_path)  # Remove the temporary file after processing
-
-    #     return redirect(request.url)  # Reload the page to avoid resubmission
-
-    return render_template('uploadmri.html')  # For GET request, render the form
+# Home route
+@app.route('/home')
+def home():
+    return render_template('home.html')
 
 
-# Dashboard route
-@app.route('/dashboard')  
-def dashboard():  
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('dashboard.html')
+# How It Works route
+@app.route('/faq')
+def faq():
+    return render_template('faq.html')  # Corrected to render a template
 
 # Registration route
 @app.route('/register', methods=['GET', 'POST'])
@@ -194,7 +231,9 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
             session['logged_in'] = True
-            return redirect(url_for('dashboard'))
+            return redirect(url_for('home'))
+        # return redirect(url_for('uploadmri'))
+
         else:
             flash('Invalid username or password.')
             return redirect(url_for('login'))

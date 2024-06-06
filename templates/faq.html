@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - MEDCOM</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Import Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        /* Use Roboto font for the entire content */
+        body, h1, p, .navbar-nav .nav-link {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Navbar adjustments */
+        .navbar {
+            background-color: white; /* White background */
+            padding: 10px 20px; /* Padding adjustment */
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            max-height: 50px; /* Icon height */
+            margin-right: 10px;
+        }
+
+        .navbar-nav .nav-link {
+            color: black; /* Black text for better contrast */
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 20px; /* Increased spacing between links */
+        }
+
+        /* Page content styling */
+        .faq-page {
+            padding: 40px 20px; /* Padding for overall content */
+        }
+
+        .content-container {
+            max-width: 800px; /* Set maximum width */
+            margin: 0 auto; /* Center align */
+        }
+        /* Blue border around login button with rounded shape */
+        .login-link {
+            border: 2px solid #007bff; /* Blue border */
+            border-radius: 15px; /* Rounded corners */
+            padding: 5px 10px; /* Padding for spacing */
+            text-decoration: none; /* No underline */
+            color: black; /* Keep text color */
+            transition: background 0.3s; /* Smooth transition */
+        }
+
+        .login-link:hover {
+            background-color: #e6f0ff; /* Light blue background on hover */
+        }
+        .faq-title {
+            font-size: 32px; /* Larger font for the title */
+            text-align: center;
+            margin-bottom: 20px; /* Space between title and content */
+        }
+
+        .intro-text {
+            text-align: center;
+            font-size: 18px; /* Slightly larger font for the intro text */
+            color: #555; /* Grey color */
+            margin-bottom: 20px; /* Space between intro and content */
+        }
+
+        /* Accordion styling for FAQ questions */
+        .accordion {
+            background: transparent; /* Transparent background for cleaner look */
+            border-bottom: 1px solid #ddd; /* Border for separation */
+            padding: 10px 20px; /* Padding for the accordion */
+            display: flex;
+            justify-content: space-between; /* Space between title and button */
+            cursor: pointer; /* Change cursor to pointer */
+        }
+
+        .accordion__title {
+            font-size: 18px; /* Font size for question title */
+        }
+
+        .accordion__button {
+            background: none; /* No background */
+            border: none; /* No border */
+            outline: none; /* No outline */
+            font-size: 18px; /* Font size for the button */
+            transition: transform 0.3s; /* Smooth transition for rotation */
+        }
+
+        .accordion__button:hover {
+            color: #007bff; /* Change color on hover */
+        }
+
+        /* Toggle the visibility of content on click */
+        .accordion__content {
+            display: none; /* Initially hidden */
+            padding: 10px 20px; /* Padding for the content */
+            border-top: 1px solid #ddd; /* Border on top */
+            background: #f9f9f9; /* Light background */
+        }
+
+        /* Get Started section */
+        .get-started {
+            text-align: center;
+            padding: 20px; /* Padding for the section */
+            background-color: #f8f9fa; /* Light grey background */
+        }
+
+        .get-started a {
+            color: #007bff; /* Blue link */
+            text-decoration: none; /* No underline */
+        }
+
+        .get-started a:hover {
+            text-decoration: underline; /* Underline on hover */
+        }
+
+        /* .heading-container{
+            color: rgba(0, 0, 255, 0.63);
+
+        } */
+        .heading-container{
+            color: rgba(0, 0, 255, 0.63);
+            margin-top: 40px;
+        }
+        .heading-container-h3{
+            color: rgba(0, 0, 0, 0.527);
+            margin-left: 160px;
+        }
+        .get-started .b-button {
+            padding: 10px 20px; /* Padding for the button */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #007bff; /* Blue background */
+            color: white; /* White text */
+            text-decoration: none; /* No underline */
+        }
+
+        .get-started .b-button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>
+
+    <!-- JavaScript for toggling accordion content -->
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const accordions = document.querySelectorAll(".accordion");
+        accordions.forEach(function (accordion) {
+            accordion.addEventListener("click", function () {
+                const content = this.nextElementSibling; /* Find associated content */
+                content.style.display = content.style.display === "block" ? "none" : "block"; /* Toggle display */
+                const button = this.querySelector(".accordion__button");
+                button.style.transform = content.style.display === "block" ? "rotate(45deg)" : "rotate(0deg)"; /* Toggle button rotation */
+            });
+        });
+    });
+    </script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top"> <!-- Fixed-top navbar with white background -->
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <img src="/static/images/logo.png" alt="MEDCOM Logo"> MEDCOM <!-- Logo and text -->
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">How It Works</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Get Started</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/faq">FAQ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="login-link nav-link" href="/login">Login</a> <!-- Blue border with rounded shape -->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FAQ Page Content -->
+    <div class="faq-page"> <!-- Content for the FAQ page -->
+        <div class="content-container"> <!-- Narrowed content -->
+            <h2 class="heading-container">Frequently Asked Questions</h2> <!-- Title -->
+            <br>
+            <h4 class="heading-container-h3"> Learn more about MEDCOM. </h4> <!-- Introductory text -->
+            <br>
+
+            <!-- FAQ questions in accordion format -->
+            <div class="questions-wrapper">
+                <!-- Example question 1 -->
+                <div class="accordion"> <!-- No background -->
+                    <div class="accordion__title">Why did you start MEDCOM?</div> <!-- Question title -->
+                    <button class="accordion__button">+</button> <!-- Plus button for toggle -->
+                </div>
+                <div class="accordion__content"> <!-- Dummy text for the expanded content -->
+                    MEDCOM is started by FAST students target to make possible to find digital solution for diagnosis of prostate cancer.
+                </div>
+
+                <!-- Example question 2 -->
+                <div class="accordion"> <!-- No background -->
+                    <div class="accordion__title">What is MEDCOM?</div> <!-- Question title -->
+                    <button class="accordion__button">+</button> <!-- Plus button for toggle -->
+                </div>
+                <div class="accordion__content"> <!-- Dummy text for the expanded content -->
+                    It is a platfrom provide you solution to diagnosis of prostate cancer where you could upload your MRI and get the results within seconds.
+                </div>
+
+                <!-- qustion 3 -->
+                <div class="accordion"> <!-- No background -->
+                    <div class="accordion__title">How accurate are the results?</div> <!-- Question title -->
+                    <button class="accordion__button">+</button> <!-- Plus button for toggle -->
+                </div>
+                <div class="accordion__content"> <!-- Dummy text for the expanded content -->
+                    We have achieved more than 93% accuracy. We are confident about our results.
+                </div>                
+
+                <!-- question 4 -->
+                <div class="accordion"> <!-- No background -->
+                    <div class="accordion__title">    Is MEDCOM Free?</div> <!-- Question title -->
+                    <button class="accordion__button">+</button> <!-- Plus button for toggle -->
+                </div>
+                <div class="accordion__content"> <!-- Dummy text for the expanded content -->
+                    Yes its totally free you just have to login your accound go to the upload MRI page and see the results.
+                </div>
+            </div>
+            <br>
+            <!-- Get Started section with call-to-action -->
+            <section class="get-started">
+                <div class="get-started__text"> Don't see your question here? <br class="d-block d-sm-none">
+                    <a href="/contact">Ask us anything</a> <!-- Contact us link -->
+                </div>
+                <br>
+                <div>
+                    <a class="b-button" href="/register">Get Started</a> <!-- Get Started button -->
+                </div>
+            </section>
+        </div>
+    </div>
+    <!-- Bootstrap JS and Font Awesome -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

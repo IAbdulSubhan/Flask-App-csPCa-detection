@@ -4,117 +4,239 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upload MRI</title>
+  <title>Upload MRI - MEDCOM</title>
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
   <style>
-    /* Custom Styles */
+    /* Use Roboto font for the entire content */
+    body,
+    h1,
+    p,
+    .navbar-nav .nav-link {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    /* Navbar with transparent background */
+    .navbar {
+      background-color: transparent;
+      padding: 10px 20px;
+      box-shadow: none;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+    }
+
     .navbar-brand img {
-      max-height: 40px;
+      max-height: 50px;
       margin-right: 10px;
     }
 
-    .navbar {
-      background-color: #333;
-    }
-
     .navbar-nav a {
-      color: white;
-    }
-
-    .footer a {
       color: black;
-      margin: 0 10px;
+      font-weight: bold;
     }
 
-    /* Center the square box */
+    .navbar-nav .nav-link {
+      margin-right: 20px;
+    }
+
+    .content-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      margin-top: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* Blue border around logout button with rounded shape */
+    .logout-link {
+      border: 2px solid #007bff;
+      /* Blue border */
+      border-radius: 15px;
+      /* Rounded corners */
+      padding: 5px 10px;
+      /* Padding for spacing */
+      text-decoration: none;
+      /* No underline */
+      color: black;
+      /* Keep text color */
+      transition: background 0.3s;
+      /* Smooth transition */
+    }
+
+    .logout-link:hover {
+      background-color: #e6f0ff;
+      /* Light blue background on hover */
+    }
+
     .square-box {
-      width: 400px;
-      height: 400px;
-      background-color: #fff;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border: 1px solid #ccc;
       border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* Style the button */
+
+    /* Color-coding and styling for prediction results */
+    .prediction-Cancerous {
+      color: red;
+      font-weight: bold;
+      font-size: 1.5em;
+      /* Larger font */
+    }
+
+    .prediction-noncancerous {
+      color: green;
+      font-weight: bold;
+      font-size: 1.5em;
+      /* Larger font */
+    }
+
+    /* Background and additional styling for prediction */
+    .prediction-box {
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #f2f2f2;
+      /* Light gray background */
+      display: inline-block;
+      text-align: center;
+    }
+
     .add-files-btn {
       width: 100%;
+    }
+
+    .nav-link.active {
+      text-decoration: underline;
+      text-decoration-color: blue;
+      text-decoration-style: solid;
+      text-decoration-thickness: 3px;
+      /* Make the underline thicker */
+      line-height: 1.2;
+      /* Adjust line height for padding between text and underline */
     }
   </style>
 </head>
 
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark">
+  <nav class="navbar navbar-expand-lg"> <!-- Transparent navbar -->
     <div class="container">
-      <a class="navbar-brand" href="/">
-        <img src="/static/images/logo.png" alt="Logo">
-        MEDCOM
+      <a class="navbar-brand" href="/home">
+        <img src="/static/images/logo.png" alt="Logo"> MEDCOM
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon" style="color: black;"></span> <!-- Icon color to black -->
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-          <!-- Show "Upload MRI" only if user is logged in -->
           <li class="nav-item">
-            <a class="nav-link" href="/uploadmri">Upload MRI</a>
+            <a id="uploadmri-link" class="nav-link" href="/uploadmri">Upload MRI</a>
           </li>
-          <!-- Conditional logout -->
           <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
+            <a id="segment-link" class="nav-link" href="/segment">Segment MRI</a>
           </li>
-          <!-- Redirect to login if not logged in -->
           <li class="nav-item">
-            <a class="nav-link" href="/login">Login</a>
+            <a id="logout-link" class="logout-link nav-link" href="/logout">Logout</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- Card with square box -->
-  <div class="container">
-    <div class="row justify-content-center mt-5">
-      <div class="col-md-4">
+  <!-- Content with two cards -->
+  <div class="content-container">
+    <div class="row">
+      <!-- Left card for upload -->
+      <div class="col-md-6"> <!-- Half-width for the left card -->
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Upload MRI</h5>
             <form action="/uploadmri" method="post" enctype="multipart/form-data">
-              <div class="square-box d-flex justify-content-center align-items-center">
+              <div class="square-box">
                 <div class="upload-card">
-                  <div class="card-body text-center">
-                    <!-- Upload icon -->
-                    <i class="fas fa-cloud-upload-alt fa-5x mb-3"></i>
-                    <!-- Upload file input -->
-                    <input type="file" name="my_image" class="form-control mb-3" required>
-                    <!-- Upload button -->
-                    <button type="submit" class="btn btn-primary add-files-btn">Upload</button>
-                  </div>
+                  <i class="fas fa-cloud-upload-alt fa-5x mb-3"></i>
+                  <input type="file" name="my_image" class="form-control mb-3" required>
+                  <button type="submit" class="btn btn-primary add-files-btn">View Result</button>
                 </div>
               </div>
-              <div class="form-gourp">
-                {%if prediction%}
-                <h1>Your Prediction: <i>{{prediction}}</i></h1>
-                {% endif %}
-              </div>
-
             </form>
+          </div>
+        </div>
+      </div>
 
+      <!-- Right card for prediction and image -->
+      <div class="col-md-6"> <!-- Half-width for the right card -->
+        <div class="card"> <!-- Rounded corners -->
+          <div class="card-body"> <!-- Card content -->
+            <h5 class="card-title">Prediction Result</h5>
+            <div> <!-- Display the prediction with background and bold style -->
+              {% if prediction %}
+              <div class="prediction-box"> <!-- Box for styling prediction -->
+                <span class="{{ 'prediction-Cancerous' if prediction == 'Cancerous' else 'prediction-noncancerous' }}">
+                  Prediction: {{ prediction }}
+                </span>
+              </div>
+              {% endif %}
+            </div>
+            <div> <!-- Display the uploaded image -->
+              {% if file_name %}
+              <img src="{{ url_for('static', filename='images/' + file_name) }}" alt="Uploaded MRI Image" width="100%">
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get the current path
+      var path = window.location.pathname;
+
+      // Map paths to link IDs
+      var pathToLinkId = {
+        "/uploadmri": "uploadmri-link",
+        "/segment": "segment-link",
+        "/logout": "logout-link"
+      };
+
+      // Check if path contains '/uploadmri' in case of variations (e.g., query parameters)
+      if (path.includes("/uploadmri")) {
+        path = "/uploadmri";
+      }
+
+      // Get the corresponding link element
+      var activeLinkId = pathToLinkId[path];
+      if (activeLinkId) {
+        var activeLink = document.getElementById(activeLinkId);
+        if (activeLink) {
+          activeLink.classList.add("active");
+        }
+      }
+    });
+  </script>
+
+  <!-- Bootstrap JS and Font Awesome -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 

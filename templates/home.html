@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MEDCOM</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Import Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <style>
+        /* Use Roboto font for the entire content */
+        body,
+        h1,
+        p,
+        .navbar-nav .nav-link {
+            font-family: 'Roboto', sans-serif;
+            /* Apply Roboto font */
+        }
+
+        /* Navbar adjustments */
+        .navbar {
+            background-color: transparent;
+            padding: 10px 20px;
+            box-shadow: none;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand img {
+            max-height: 50px;
+            /* Icon height */
+            margin-right: 10px;
+        }
+
+        .navbar-nav a {
+            color: black;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link {
+            margin-right: 20px;
+        }
+
+        /* Animation for the heading */
+        @keyframes slideInFromTop {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        h1 {
+            font-size: 32px;
+            animation: slideInFromTop 1.5s ease;
+            /* Apply the animation */
+        }
+
+        /* Blue border around logout button with rounded shape */
+        .logout-link {
+            border: 2px solid #007bff;
+            /* Blue border */
+            border-radius: 15px;
+            /* Rounded corners */
+            padding: 5px 10px;
+            /* Padding for spacing */
+            text-decoration: none;
+            /* No underline */
+            color: black;
+            /* Keep text color */
+            transition: background 0.3s;
+            /* Smooth transition */
+        }
+
+        .logout-link:hover {
+            background-color: #e6f0ff;
+            /* Light blue background on hover */
+        }
+
+
+        /* Content adjustments */
+        .content {
+            padding: 20px;
+            /* General padding for spacing */
+        }
+
+        /* Left card with margin-top of 140px */
+        .left-card {
+            margin-top: 140px;
+            /* Extra margin for fixed-top navbar */
+        }
+
+        /* Right card with margin-top of 100px */
+        .right-card {
+            margin-top: 80px;
+            padding-left: 100px;
+            /* Reduced margin */
+        }
+
+        /* Heading and paragraph styling */
+        h1 {
+            font-size: 32px;
+            /* Larger heading for emphasis */
+        }
+
+        p {
+            font-size: 16px;
+            /* Comfortable reading size */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top"> <!-- Fixed-top navbar with white background -->
+        <div class="container">
+            <a class="navbar-brand" href="/home">
+                <img src="/static/images/logo.png" alt="MEDCOM Logo"> MEDCOM <!-- Logo and text -->
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a id="uploadmri-link" class="nav-link" href="/uploadmri">Upload MRI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="segment-link" class="nav-link" href="/segment">Segment MRI</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="logout-link" class="logout-link nav-link" href="/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 50/50 Split Content -->
+    <div class="container content">
+        <div class="row">
+            <div class="col-md-6 left-card"> <!-- Left side with text -->
+                <h1>Welcome to MEDCOM</h1>
+                <br>
+                <p>
+                    Welcome to our Prostate Cancer Diagnosis Tool! Our user-friendly Flask app
+                    lets you upload MRI images for fast and accurate results. With detailed
+                    explanations, easy-to-understand insights, and top-notch privacy measures,
+                    we're here to support your journey to better prostate health. Click below
+                    to upload your images and take control today!
+                </p>
+                <br>
+                <a href="/uploadmri" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="col-md-6 right-card"> <!-- Right side content without carousel -->
+                <img src="/static/images/doctor.png" alt="MRI Machine" class="img-fluid rounded"> <!-- Static image -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Font Awesome -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

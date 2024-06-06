@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Segment MRI - MEDCOM</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+  <style>
+    /* Use Roboto font for the entire content */
+    body,
+    h1,
+    p,
+    .navbar-nav .nav-link {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    /* Navbar with transparent background */
+    .navbar {
+      background-color: transparent;
+      padding: 10px 20px;
+      box-shadow: none;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar-brand img {
+      max-height: 50px;
+      margin-right: 10px;
+    }
+
+    .navbar-nav a {
+      color: black;
+      font-weight: bold;
+    }
+
+    .navbar-nav .nav-link {
+      margin-right: 20px;
+    }
+
+    .content-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .card {
+      margin-top: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* Blue border around logout button with rounded shape */
+    .logout-link {
+      border: 2px solid #007bff;
+      /* Blue border */
+      border-radius: 15px;
+      /* Rounded corners */
+      padding: 5px 10px;
+      /* Padding for spacing */
+      text-decoration: none;
+      /* No underline */
+      color: black;
+      /* Keep text color */
+      transition: background 0.3s;
+      /* Smooth transition */
+    }
+
+    .logout-link:hover {
+      background-color: #e6f0ff;
+      /* Light blue background on hover */
+    }
+
+    .square-box {
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+
+    /* Color-coding and styling for prediction results */
+    .prediction-Cancerous {
+      color: red;
+      font-weight: bold;
+      font-size: 1.5em;
+      /* Larger font */
+    }
+
+    .prediction-noncancerous {
+      color: green;
+      font-weight: bold;
+      font-size: 1.5em;
+      /* Larger font */
+    }
+
+    /* Background and additional styling for prediction */
+    .prediction-box {
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #f2f2f2;
+      /* Light gray background */
+      display: inline-block;
+      text-align: center;
+    }
+
+    .add-files-btn {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      text-decoration: underline;
+      text-decoration-color: blue;
+      text-decoration-style: solid;
+      text-decoration-thickness: 3px;
+      /* Make the underline thicker */
+      line-height: 1.2;
+      /* Adjust line height for padding between text and underline */
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg"> <!-- Transparent navbar -->
+    <div class="container">
+      <a class="navbar-brand" href="/home">
+        <img src="/static/images/logo.png" alt="Logo"> MEDCOM
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="color: black;"></span> <!-- Icon color to black -->
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+          <li class="nav-item">
+            <a id="uploadmri-link" class="nav-link" href="/uploadmri">Upload MRI</a>
+          </li>
+          <li class="nav-item">
+            <a id="segment-link" class="nav-link" href="/segment">Segment MRI</a>
+          </li>
+          <li class="nav-item">
+            <a id="logout-link" class="logout-link nav-link" href="/logout">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <div class="content-container">
+
+    <div class="row">
+      <!-- Left card for upload -->
+      <div class="col-md-6"> <!-- Half-width for the left card -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Upload MRI</h5>
+            <form action="/segment" method="post" enctype="multipart/form-data">
+              <div class="square-box">
+                <div class="upload-card">
+                  <i class="fas fa-cloud-upload-alt fa-5x mb-3"></i>
+                  <input type="file" name="seg_image" class="form-control mb-3" required>
+                  <button type="submit" class="btn btn-primary add-files-btn">View Result</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right card for prediction and image -->
+      <div class="col-md-6"> <!-- Half-width for the right card -->
+        <div class="card"> <!-- Rounded corners -->
+          <div class="card-body"> <!-- Card content -->
+            <h5 class="card-title">Binary Segmentation Result</h5>
+            <div> <!-- Display the uploaded image -->
+              {% if file_name %}
+              {% if prediction == 'Non Cancerous' %}
+              <img src="{{ url_for('static', filename='MRI/masks/slice.png') }}" alt="Noncancerous Slice" width="100%">
+              {% else %}
+              {% set slice_number = file_name.split('slice')[1].split('.')[0] %}
+              <img src="{{ url_for('static', filename='MRI/masks/slices/slice' + slice_number + '.png') }}"
+                alt="Cancerous Mask Slice" width="100%">
+              {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      // Get the current path
+      var path = window.location.pathname;
+
+      // Map paths to link IDs
+      var pathToLinkId = {
+        "/uploadmri": "uploadmri-link",
+        "/segment": "segment-link",
+        "/logout": "logout-link"
+      };
+
+      // Check if path contains '/uploadmri' in case of variations (e.g., query parameters)
+      if (path.includes("/uploadmri")) {
+        path = "/uploadmri";
+      }
+
+      // Get the corresponding link element
+      var activeLinkId = pathToLinkId[path];
+      if (activeLinkId) {
+        var activeLink = document.getElementById(activeLinkId);
+        if (activeLink) {
+          activeLink.classList.add("active");
+        }
+      }
+    });
+  </script>
+
+  <!-- Bootstrap JS and Font Awesome -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

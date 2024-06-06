@@ -1,83 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MEDCOM</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <!-- Import Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
-        /* Custom Styles */
+        /* Use Roboto font for the entire content */
+        body, h1, p, .navbar-nav .nav-link {
+            font-family: 'Roboto', sans-serif; /* Apply Roboto font */
+        }
+
+        /* Navbar adjustments */
+        .navbar {
+            background-color: white; /* White background */
+            padding: 10px 20px; /* Padding adjustment */
+            box-shadow: none; /* Remove border/shadow between navbar and page */
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+
         .navbar-brand img {
-            max-height: 30px; /* Reduce logo size */
+            max-height: 50px; /* Icon height */
             margin-right: 10px;
         }
 
-        .navbar {
-            background-color: #333;
-            padding: 5px 10px; /* Adjust padding */
-        }
-
+        /* Adjust spacing between navbar links */
         .navbar-nav .nav-link {
-            color: black; /* Set text color to black */
-            font-weight: bold; /* Set font weight to bold */
-            font-size: 14px; /* Reduce font size */
+            color: black; /* Black text for better contrast */
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 20px; /* Increased spacing between links */
         }
 
-        /* Background Image */
-        body {
-            background-color: #333; /* Set background color for navbar */
-            margin: 0; /* Remove default margin */
-            overflow-y: auto; /* Enable vertical scrolling */
+        /* Blue border around login button with rounded shape */
+        .login-link {
+            border: 2px solid #007bff; /* Blue border */
+            border-radius: 15px; /* Rounded corners */
+            padding: 5px 10px; /* Padding for spacing */
+            text-decoration: none; /* No underline */
+            color: black; /* Keep text color */
+            transition: background 0.3s; /* Smooth transition */
         }
 
-        .bg-image {
-            background-image: url('/static/images/MRI-machine.jpg'); /* Changed background image to a random medical image from Unsplash */
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-            height: 100vh; /* Set height to fill the viewport */
-            display: flex; /* Use flexbox for alignment */
-            justify-content: center; /* Center horizontally */
-            align-items: center; /* Center vertically */
-            text-align: center; /* Center text */
-            color: #fff; /* Set text color to white */
+        .login-link:hover {
+            background-color: #e6f0ff; /* Light blue background on hover */
         }
 
-        /* Content container */
-        .content-container {
-            padding: 20px; /* Increased padding for better spacing */
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-            border-radius: 10px; /* Rounded corners */
+        /* Content adjustments */
+        .content {
+            padding: 20px; /* General padding for spacing */
         }
 
-        /* Welcome animation */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Left card with margin-top of 140px */
+        .left-card {
+            margin-top: 140px; /* Extra margin for fixed-top navbar */
         }
 
-        h2 {
-            animation: fadeIn 1s ease-out; /* Apply animation to heading */
+        /* Right card with margin-top of 100px */
+        .right-card {
+            margin-top: 80px; /* Reduced margin */
+            padding-left: 130px; 
+        }
+
+        /* Heading and paragraph styling */
+        h1 {
+            font-size: 32px; /* Larger heading for emphasis */
+        }
+
+        p {
+            font-size: 16px; /* Comfortable reading size */
         }
     </style>
 </head>
-
-<body style="position:relative;">
+<body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top mb-"> <!-- Add fixed-top class -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top"> <!-- Fixed-top navbar with white background -->
         <div class="container">
             <a class="navbar-brand" href="/">
-                <img src="/static/images/logo.png" alt="Logo">
-                MEDCOM
+                <img src="/static/images/logo.png" alt="MEDCOM Logo"> MEDCOM <!-- Logo and text -->
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -85,28 +93,40 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ml-auto">
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">How It Works</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/register">Get Started</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">login</a>
+                        <a class="nav-link" href="/faq">FAQ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">How it works</a>
+                        <a class="login-link nav-link" href="/login">Login</a> <!-- Blue border with rounded shape -->
                     </li>
-
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Background Image -->
-    <div class="bg-image">
-        <!-- Content -->
-        <div class="container content-container">
-            <h2>Welcome to MEDCOM</h2>
-            
-            <p class="my-4">Embark on a journey of hope and healing with MEDCOM your trusted partner in the diagnosis and treatment of prostate cancer. Utilizing cutting-edge bpMRI scans, we navigate the intricate pathways of your health, illuminating possibilities and guiding you towards a brighter tomorrow. With precision and compassion, we stand by your side, empowering you on your quest for wellness.</p>
+    <!-- 50/50 Split Content -->
+    <div class="container content">
+        <div class="row">
+            <div class="col-md-6 left-card"> <!-- Left side with text -->
+                <h1>Health & Longevity Management</h1>
+                <br>
+                <p>
+                    Embark on a journey of hope and healing with MEDCOM, your trusted partner in the diagnosis and treatment of prostate cancer. Utilizing cutting-edge bpMRI scans, we navigate the intricate pathways of your health, illuminating possibilities and guiding you towards a brighter tomorrow. With precision and compassion, we stand by your side, empowering you on your quest for wellness.
+                </p>
+                <br>
+                <a href="/register" class="btn btn-primary">Get Started</a>
+            </div>
+            <div class="col-md-6 right-card "> <!-- Right side content without carousel -->
+                <img src="/static/images/image6.png" alt="prostate cancer Logo" class="img-fluid rounded"> <!-- Static image -->
+            </div>
         </div>
     </div>
 
@@ -115,5 +135,4 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>
